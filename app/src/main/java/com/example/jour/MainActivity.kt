@@ -30,8 +30,8 @@ class MainActivity : AppCompatActivity(), NoteClickEditInterface, NoteClickDelet
         jourRV.adapter = jourRVAdapter
         viewModel= ViewModelProvider(
             this,
-            ViewModelProvider.AndroidViewModelFactory.getInstance(application)).get(PlaceViewModel::class.java)
-        viewModel.allEntries.observe(this, Observer { list->
+            ViewModelProvider.AndroidViewModelFactory.getInstance(application))[PlaceViewModel::class.java]
+        viewModel.allEntries.observe(this, { list->
             list?.let {
                 jourRVAdapter.updateList(it)
             }
