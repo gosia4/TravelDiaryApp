@@ -35,8 +35,6 @@ class PlaceRVAdapter(
         holder.titleTV.setText(allEntries.get(position).jourTitle)
         holder.descTV.setText(allEntries.get(position).jourDescription)
         holder.dateTV.setText(allEntries.get(position).jourDate)
-        //holder.ratingTV.setText(allEntries.get(position).rating)
-//        holder.ratingTV.text = allEntries[position].rating.toString()
         val ratingText = "Rating: ${allEntries[position].rating}"
         holder.ratingTV.text = ratingText
         holder.deleteTV.setOnClickListener{

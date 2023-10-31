@@ -21,15 +21,12 @@ import com.example.jour.MVVM.PlaceViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.io.FileInputStream
 import java.io.IOException
-import java.text.SimpleDateFormat
 import java.util.*
 
 class AddEditNoteActivity : AppCompatActivity() {
     lateinit var backButton: FloatingActionButton
-    lateinit var formatButton: FloatingActionButton
     lateinit var editTitle: EditText
     lateinit var editDesc: EditText
-    //lateinit var editDate: EditText
     lateinit var rating: RatingBar
     lateinit var saveButton: FloatingActionButton
     lateinit var viewModel: PlaceViewModel
@@ -56,14 +53,12 @@ class AddEditNoteActivity : AppCompatActivity() {
         setContentView(R.layout.activity_add_edit_note)
         editTitle = findViewById(R.id.editNoteTitle)
         editDesc = findViewById(R.id.editNoteDescription)
-        //editDate = findViewById(R.id.editTextDate)
         rating = findViewById(R.id.ratingBar)
         val editDate = findViewById<EditText>(R.id.updateStartDateTextView)
         val rating = findViewById<RatingBar>(R.id.ratingBar)
         saveButton = findViewById(R.id.jourSaveButton)
         backButton = findViewById(R.id.backButton)
         addImageButton = findViewById(R.id.jourAddImgButton)
-        formatButton = findViewById(R.id.jourFormatButton)
         theimage = findViewById(R.id.imageView1)
 
         updateStartDateButton = findViewById<Button>(R.id.updateStartDateButton)
@@ -87,8 +82,6 @@ class AddEditNoteActivity : AppCompatActivity() {
             noteID = intent.getIntExtra("noteID", -1)
             editTitle.setText(noteTitle)
             editDate.setText(noteDate)
-//            updateStartDateTextView?.setText(noteDate)
-//            showDates()
             editDesc.setText(noteDesc)
             rating.rating = noteRating.toFloat()
 
@@ -107,12 +100,7 @@ class AddEditNoteActivity : AppCompatActivity() {
         saveButton.setOnClickListener {
             val noteTitle = editTitle.text.toString()
             val noteDesc = editDesc.text.toString()
-            //val dateStr = updateStartDateTextView?.text.toString()
-            //val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.US)
-            //val noteDate: Date = dateFormat.parse(dateStr)
             val noteRating = rating.rating.toInt()
-//            val startDate = updateStartDateTextView.text.toString().trim()
-            //val startDate = updateStartDateTextView?.text?.toString()?.trim() ?: ""
             val startDate = updateStartDateTextView?.text.toString() // Get the selected date
 
             if (noteType == "Edit") {
@@ -140,14 +128,6 @@ class AddEditNoteActivity : AppCompatActivity() {
 
         backButton.setOnClickListener {
             val intent = Intent(this@AddEditNoteActivity, MainActivity::class.java)
-            startActivity(intent)
-            this.finish()
-        }
-
-        formatButton.setOnClickListener {
-            val intent = Intent(this@AddEditNoteActivity, TextFormatter::class.java)
-            intent.putExtra("title", editTitle.text.toString())
-            intent.putExtra("description", editDesc.text.toString())
             startActivity(intent)
             this.finish()
         }
@@ -186,7 +166,6 @@ class AddEditNoteActivity : AppCompatActivity() {
         updateStartDateTextView?.setText(tripStartDateString)
     }
 
-
     fun onClickPickStartDate(view: View?) {
         val calendar = Calendar.getInstance()
         year = calendar[Calendar.YEAR]
@@ -201,20 +180,4 @@ class AddEditNoteActivity : AppCompatActivity() {
         )
         datePickerDialog.show()
     }
-//    fun onClickPickStartDate(view: View?) {
-//        val calendar = Calendar.getInstance()
-//        year = calendar[Calendar.YEAR]
-//        month = calendar[Calendar.MONTH]
-//        day = calendar[Calendar.DAY_OF_MONTH]
-//        val datePickerDialog = DatePickerDialog(this,
-//            { _, year, month, dayOfMonth ->
-//                val formattedDate = String.format("%02d-%02d-%d", dayOfMonth, month + 1, year)
-//                updateStartDateTextView?.text = formattedDate
-//            },
-//            year,
-//            month,
-//            day
-//        )
-//        datePickerDialog.show()
-//    }
 }
