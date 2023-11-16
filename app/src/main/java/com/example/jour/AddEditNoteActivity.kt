@@ -41,6 +41,12 @@ class AddEditNoteActivity : AppCompatActivity() {
     private var month = 0
     private var day = 0
     private var updateStartDateTextView: TextView? = null
+    private var updateEndDateButton: Button? = null
+    private var updateEndDateTextView: TextView? = null
+    private val tripEndDateString: String? = null
+    private var isStartDate = true // Flag to determine if the selected date is for start or end
+
+
 
 
 
@@ -55,6 +61,9 @@ class AddEditNoteActivity : AppCompatActivity() {
         editDesc = findViewById(R.id.editNoteDescription)
         rating = findViewById(R.id.ratingBar)
         val editDate = findViewById<EditText>(R.id.updateStartDateTextView)
+//        updateEndDateButton = findViewById<Button>(R.id.updateEndDateButton)
+        //updateEndDateTextView = findViewById<TextView>(R.id.updateStartDateTextView2)
+
         val rating = findViewById<RatingBar>(R.id.ratingBar)
         saveButton = findViewById(R.id.jourSaveButton)
         backButton = findViewById(R.id.backButton)
@@ -112,7 +121,7 @@ class AddEditNoteActivity : AppCompatActivity() {
                     startActivity(Intent(applicationContext, MainActivity::class.java))
                     this.finish()
                 } else {
-                    Toast.makeText(this, "Please fill the columns!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Please fill the rows!", Toast.LENGTH_SHORT).show()
                 }
             } else {
                 if (noteTitle.isNotEmpty() && noteDesc.isNotEmpty() && startDate.isNotEmpty()) {
@@ -121,7 +130,7 @@ class AddEditNoteActivity : AppCompatActivity() {
                     startActivity(Intent(applicationContext, MainActivity::class.java))
                     this.finish()
                 } else {
-                    Toast.makeText(this, "Please fill both the columns!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Please fill the rows!", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -135,7 +144,8 @@ class AddEditNoteActivity : AppCompatActivity() {
         addImageButton.setOnClickListener {
             pickImageGallery()
         }
-        updateStartDateButton?.setOnClickListener { onClickPickStartDate(it) }
+        updateStartDateButton?.setOnClickListener { isStartDate = true
+            onClickPickStartDate(it) }
     }
 
     private fun pickImageGallery() {
@@ -166,18 +176,77 @@ class AddEditNoteActivity : AppCompatActivity() {
         updateStartDateTextView?.setText(tripStartDateString)
     }
 
-    fun onClickPickStartDate(view: View?) {
-        val calendar = Calendar.getInstance()
-        year = calendar[Calendar.YEAR]
-        month = calendar[Calendar.MONTH]
-        day = calendar[Calendar.DAY_OF_MONTH]
-        calendar.time
-        val datePickerDialog = DatePickerDialog(this,
-            { view, year, month, dayOfMonth -> updateStartDateTextView?.setText(dayOfMonth.toString() + "-" + (month + 1) + "-" + year) },
-            year,
-            month,
-            day
-        )
-        datePickerDialog.show()
+
+//    fun onClickPickStartDate(view: View?) {
+//        val calendar = Calendar.getInstance()
+//        year = calendar[Calendar.YEAR]
+//        month = calendar[Calendar.MONTH]
+//        day = calendar[Calendar.DAY_OF_MONTH]
+//        calendar.time
+//        val datePickerDialog = DatePickerDialog(this,
+//            { _, year, month, dayOfMonth ->
+//                if (isStartDate) {
+//                    updateStartDateTextView?.text = "$dayOfMonth-${month + 1}-$year"
+//                    isStartDate = false
+//                    onClickPickStartDate(view) // Show the date picker again for the end date
+//                } else {
+//                    updateStartDateTextView?.text = "${updateStartDateTextView?.text} - $dayOfMonth-${month + 1}-$year"
+//                }
+//            },
+//            year,
+//            month,
+//            day
+//        )
+//        datePickerDialog.show()
+//    }
+fun onClickPickStartDate(view: View?) {
+    val calendar = Calendar.getInstance()
+    year = calendar[Calendar.YEAR]
+    month = calendar[Calendar.MONTH]
+    day = calendar[Calendar.DAY_OF_MONTH]
+    calendar.time
+    val datePickerDialog = DatePickerDialog(this,
+        { _, year, month, dayOfMonth ->
+            if (isStartDate) {
+                updateStartDateTextView?.text = "$dayOfMonth-${month + 1}-$year"
+                isStartDate = false
+                onClickPickStartDate(view) // Pokaż ponownie DatePicker dla daty końcowej
+            } else {
+                val startDate = getStartDateFromTextView()
+                val selectedDate = Calendar.getInstance()
+                selectedDate.set(year, month, dayOfMonth)
+
+                // Sprawdź, czy data końcowa jest późniejsza niż data początkowa
+                if (selectedDate.before(startDate)) {
+                    Toast.makeText(this, "Data końcowa nie może być wcześniejsza niż data początkowa", Toast.LENGTH_SHORT).show()
+                } else {
+                    updateStartDateTextView?.text = "${updateStartDateTextView?.text} - $dayOfMonth-${month + 1}-$year"
+                }
+            }
+        },
+        year,
+        month,
+        day
+    )
+    datePickerDialog.show()
+}
+
+    // Metoda pomocnicza do uzyskania daty początkowej z TextView
+    private fun getStartDateFromTextView(): Calendar {
+        val startDateText = updateStartDateTextView?.text.toString().split(" - ")[0]
+        return parseDate(startDateText)
     }
+
+    // Metoda pomocnicza do parsowania daty z tekstu na obiekt Calendar
+    private fun parseDate(dateString: String): Calendar {
+        val dateParts = dateString.split("-")
+        val year = dateParts[2].toInt()
+        val month = dateParts[1].toInt() - 1
+        val day = dateParts[0].toInt()
+
+        val calendar = Calendar.getInstance()
+        calendar.set(year, month, day)
+        return calendar
+    }
+
 }
