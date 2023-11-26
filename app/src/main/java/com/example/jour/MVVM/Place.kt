@@ -8,10 +8,10 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "PlaceTable")
 class Place(
-    @ColumnInfo(name = "Name") val jourTitle:String,
-    @ColumnInfo(name = "description") val jourDescription:String,
+    @ColumnInfo(name = "Name") var jourTitle:String,
+    @ColumnInfo(name = "description") var jourDescription:String,
 //    @ColumnInfo(name = "date") val jourDate:Date,
-    @ColumnInfo(name = "date") val jourDate:String,
+    @ColumnInfo(name = "date") var jourDate:String,
     @ColumnInfo(name = "rating") val rating:Int,
     @ColumnInfo(name = "image", typeAffinity = ColumnInfo.BLOB) val jourImage: Bitmap?,
     @ColumnInfo(name = "latitude") val latitude: Double = 0.0,

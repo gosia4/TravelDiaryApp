@@ -7,9 +7,10 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class PlaceViewModel(application: Application): AndroidViewModel(application){
+class PlaceViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val repository: PlaceRepository
     val allEntries: LiveData<List<Place>>
-    val repository: PlaceRepository
 
     init {
         val dao = PlaceDatabase.getDatabase(application).getEntitiesDao()
@@ -17,13 +18,32 @@ class PlaceViewModel(application: Application): AndroidViewModel(application){
         allEntries=repository.allNotes
     }
 
-    fun deleteNote(note: Place) = viewModelScope.launch(Dispatchers.IO){
-        repository.delete(note)
+    fun addNote(place: Place) = viewModelScope.launch(Dispatchers.IO) {
+        repository.insert(place)
     }
-    fun updateNote(note: Place) = viewModelScope.launch(Dispatchers.IO){
-        repository.update(note)
+
+    fun updateNote(place: Place) = viewModelScope.launch(Dispatchers.IO) {
+        repository.update(place)
     }
-    fun addNote(note: Place) = viewModelScope.launch(Dispatchers.IO){
-        repository.insert(note)
+
+    fun deleteNote(place: Place) = viewModelScope.launch(Dispatchers.IO) {
+        repository.delete(place)
     }
+
+    fun getPlaceByTitle(title: String): LiveData<Place> {
+        return repository.getPlaceByTitle(title)
+    }
+
+    fun getAllPlaces(): LiveData<List<Place>> {
+        return repository.getAllPlaces()
+    }
+
+    fun sortAlphabetically(): LiveData<List<Place>> {
+        return repository.getAllEntriesAlphabetically()
+    }
+
+    fun sortByDate(): LiveData<List<Place>> {
+        return repository.getAllEntriesByDate()
+    }
+
 }

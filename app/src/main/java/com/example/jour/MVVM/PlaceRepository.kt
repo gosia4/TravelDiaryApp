@@ -24,4 +24,11 @@ class PlaceRepository(private val placeDao: PlaceDao) {
     fun getPlaceByTitle(title: String): LiveData<Place> {
         return placeDao.getPlaceByTitle(title)
     }
+    fun getAllEntriesAlphabetically(): LiveData<List<Place>> {
+        return placeDao.getAllEntriesAlphabetically()
+    }
+
+    fun getAllEntriesByDate(): LiveData<List<Place>> {
+        return placeDao.getAllEntriesByDate()
+    }
 }

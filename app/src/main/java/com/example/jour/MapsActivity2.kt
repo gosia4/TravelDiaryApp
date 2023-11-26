@@ -202,6 +202,11 @@ class MapsActivity2 : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLo
             }
         }
 
+        alertDialog.setNeutralButton("Delete") { _, _ ->
+            // Usuń istniejące miejsce
+            viewModel.deleteNote(place)
+        }
+
         alertDialog.setNegativeButton("Cancel") { dialog, _ ->
             dialog.dismiss()
         }
