@@ -11,6 +11,7 @@ class PlaceViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository: PlaceRepository
     val allEntries: LiveData<List<Place>>
+    var addedByAddEditNoteActivity: Boolean = false
 
     init {
         val dao = PlaceDatabase.getDatabase(application).getEntitiesDao()

@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -37,7 +36,7 @@ class MainActivity : AppCompatActivity(), NoteClickEditInterface, NoteClickDelet
         mapButton = findViewById(R.id.floatingActionButton)
 
         mapButton.setOnClickListener {
-            val intent = Intent(this, MapsActivity2::class.java)
+            val intent = Intent(this, Maps::class.java)
             startActivity(intent)
         }
 

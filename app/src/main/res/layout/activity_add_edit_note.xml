@@ -4,60 +4,45 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/custom_edit_drawable"
+    android:background="@color/Color1"
     tools:context=".AddEditNoteActivity">
 
     <EditText
         android:id="@+id/editNoteTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Place name"
         android:layout_margin="30dp"
-        android:singleLine="true"
-         />
+        android:hint="Place name"
+        android:singleLine="true" />
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="649dp"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="83dp">
+        android:layout_height="match_parent"
+        android:layout_below="@id/editNoteTitle">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!--            <EditText-->
-            <!--                android:id="@+id/editTextDate"-->
-            <!--                android:layout_width="273dp"-->
-            <!--                android:layout_height="37dp"-->
-            <!--                android:ems="10"-->
-            <!--                android:inputType="date"-->
-            <!--                app:layout_constraintBottom_toBottomOf="parent"-->
-            <!--                app:layout_constraintEnd_toEndOf="parent"-->
-            <!--                app:layout_constraintHorizontal_bias="1.0"-->
-            <!--                app:layout_constraintStart_toStartOf="parent"-->
-            <!--                app:layout_constraintTop_toTopOf="parent"-->
-            <!--                app:layout_constraintVertical_bias="0.0" />-->
-
             <EditText
                 android:id="@+id/updateStartDateTextView"
-                android:layout_width="230dp"
-                android:layout_height="42dp"
+                android:layout_width="211dp"
+                android:layout_height="44dp"
                 android:ems="10"
                 android:inputType="date"
                 android:onClick="onClickPickStartDate"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.801"
+                app:layout_constraintHorizontal_bias="0.84"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.008" />
+                app:layout_constraintVertical_bias="0.009" />
 
             <EditText
                 android:id="@+id/editNoteDescription"
-                android:layout_width="395dp"
-                android:layout_height="71dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="44dp"
                 android:gravity="start|top"
                 android:hint="Description"
@@ -67,7 +52,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.375"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/updateStartDateTextView" />
 
             <RatingBar
                 android:id="@+id/ratingBar"
@@ -101,9 +86,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/jourSaveButton"
@@ -132,33 +116,8 @@
         android:layout_marginBottom="30dp"
         android:backgroundTint="@color/Color3"
         android:clickable="true"
-        android:src="@drawable/imageadd_icon"
-        android:contentDescription="TODO" />
-<!--    <fragment-->
-<!--        android:id="@+id/mapFragment"-->
-<!--        android:name="com.google.android.gms.maps.SupportMapFragment"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent" />-->
-
-
-    <!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
-<!--        android:id="@+id/jourFormatButton"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_alignParentEnd="true"-->
-<!--        android:layout_alignParentRight="true"-->
-<!--        android:layout_alignParentBottom="true"-->
-<!--        android:layout_marginStart="30dp"-->
-<!--        android:layout_marginTop="10dp"-->
-<!--        android:layout_marginEnd="170dp"-->
-<!--        android:layout_marginBottom="30dp"-->
-<!--        android:backgroundTint="@color/Color3"-->
-<!--        android:clickable="true"-->
-<!--        android:src="@drawable/format_icon"-->
-<!--        android:contentDescription="TODO" />-->
-
-
-
+        android:contentDescription="TODO"
+        android:src="@drawable/imageadd_icon" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/backButton"
@@ -172,9 +131,7 @@
         android:layout_marginBottom="30dp"
         android:backgroundTint="@color/Color3"
         android:clickable="true"
-        android:src="@drawable/back_icon"
-        android:contentDescription="TODO" />
-
-
+        android:contentDescription="TODO"
+        android:src="@drawable/back_icon" />
 
 </RelativeLayout>

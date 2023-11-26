@@ -75,6 +75,7 @@ class AddEditNoteActivity : AppCompatActivity() {
             val noteDate = intent.getStringExtra("noteDate")
             val noteDesc = intent.getStringExtra("noteDescription")
             val noteRating = intent.getIntExtra("noteRating", 0)
+            val addedByMap = intent.getBooleanExtra("addedByMap", false)
 
             noteID = intent.getIntExtra("noteID", -1)
             editTitle.setText(noteTitle)
@@ -92,6 +93,11 @@ class AddEditNoteActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
+
+            // Jeżeli dodane przez mapę, ukryj opcję zapisywania na mapie
+            if (addedByMap) {
+                addImageButton.visibility = View.GONE
+            }
         }
 
         saveButton.setOnClickListener {
@@ -101,25 +107,26 @@ class AddEditNoteActivity : AppCompatActivity() {
             val startDate = updateStartDateTextView?.text.toString()
 
             if (noteType == "Edit") {
-                if (noteTitle.isNotEmpty() && noteDesc.isNotEmpty() && startDate.isNotEmpty()) {
-                    val updateNote = Place(noteTitle, noteDesc, startDate, noteRating, bmp) // tu był noteDate
-                    updateNote.id = noteID
-                    viewModel.updateNote(updateNote)
-                    Toast.makeText(this, "Updated!", Toast.LENGTH_SHORT).show()
-                    startActivity(Intent(applicationContext, MainActivity::class.java))
-                    this.finish()
-                } else {
-                    Toast.makeText(this, "Please fill the rows!", Toast.LENGTH_SHORT).show()
-                }
+                // ... reszta kodu ...
+
+                val updateNote = Place(noteTitle, noteDesc, startDate, noteRating, bmp)
+                updateNote.id = noteID
+                viewModel.updateNote(updateNote)
+                Toast.makeText(this, "Updated!", Toast.LENGTH_SHORT).show()
+                startActivity(Intent(applicationContext, MainActivity::class.java))
+                this.finish()
             } else {
-                if (noteTitle.isNotEmpty() && noteDesc.isNotEmpty() && startDate.isNotEmpty()) {
-                    viewModel.addNote(Place(noteTitle, noteDesc, startDate, noteRating, bmp)) // tu był noteDate
-                    Toast.makeText(this, "Added!", Toast.LENGTH_SHORT).show()
-                    startActivity(Intent(applicationContext, MainActivity::class.java))
-                    this.finish()
-                } else {
-                    Toast.makeText(this, "Please fill the rows!", Toast.LENGTH_SHORT).show()
+                // ... reszta kodu ...
+
+                val addedByMap = intent.getBooleanExtra("addedByMap", false)
+                if (!addedByMap) {
+                    bmp = null
                 }
+
+                viewModel.addNote(Place(noteTitle, noteDesc, startDate, noteRating, bmp))
+                Toast.makeText(this, "Added!", Toast.LENGTH_SHORT).show()
+                startActivity(Intent(applicationContext, MainActivity::class.java))
+                this.finish()
             }
         }
 
@@ -132,8 +139,10 @@ class AddEditNoteActivity : AppCompatActivity() {
         addImageButton.setOnClickListener {
             pickImageGallery()
         }
-        updateStartDateButton?.setOnClickListener { isStartDate = true
-            onClickPickStartDate(it) }
+        updateStartDateButton?.setOnClickListener {
+            isStartDate = true
+            onClickPickStartDate(it)
+        }
     }
 
     private fun pickImageGallery() {
