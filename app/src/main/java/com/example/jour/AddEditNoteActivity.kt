@@ -18,7 +18,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.jour.MVVM.Place
 import com.example.jour.MVVM.PlaceViewModel
-import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.io.FileInputStream
 import java.io.IOException
@@ -37,16 +36,11 @@ class AddEditNoteActivity : AppCompatActivity() {
     private var bmp: Bitmap? = null
     var noteID = -1
     private var updateStartDateButton: Button? = null
-    private val tripStartDateString: String? = null
     private var year = 0
     private var month = 0
     private var day = 0
     private var updateStartDateTextView: TextView? = null
-    private var updateEndDateButton: Button? = null
-    private var updateEndDateTextView: TextView? = null
-    private val tripEndDateString: String? = null
-    private var isStartDate = true // Flag to determine if the selected date is for start or end
-
+    private var isStartDate = true
 
     companion object {
         const val IMAGE_REQ_CODE = 100
@@ -59,8 +53,6 @@ class AddEditNoteActivity : AppCompatActivity() {
         editDesc = findViewById(R.id.editNoteDescription)
         rating = findViewById(R.id.ratingBar)
         val editDate = findViewById<EditText>(R.id.updateStartDateTextView)
-//        updateEndDateButton = findViewById<Button>(R.id.updateEndDateButton)
-        //updateEndDateTextView = findViewById<TextView>(R.id.updateStartDateTextView2)
 
         val rating = findViewById<RatingBar>(R.id.ratingBar)
         saveButton = findViewById(R.id.jourSaveButton)
@@ -71,9 +63,6 @@ class AddEditNoteActivity : AppCompatActivity() {
         updateStartDateButton = findViewById<Button>(R.id.updateStartDateButton)
 
         updateStartDateTextView = findViewById<TextView>(R.id.updateStartDateTextView)
-
-
-        val selectedLocation = intent.getParcelableExtra<LatLng>("selectedLocation")
 
         viewModel = ViewModelProvider(
             this,
@@ -170,34 +159,6 @@ class AddEditNoteActivity : AppCompatActivity() {
             }
         }
     }
-
-    fun showDates() {
-        updateStartDateTextView?.setText(tripStartDateString)
-    }
-
-
-//    fun onClickPickStartDate(view: View?) {
-//        val calendar = Calendar.getInstance()
-//        year = calendar[Calendar.YEAR]
-//        month = calendar[Calendar.MONTH]
-//        day = calendar[Calendar.DAY_OF_MONTH]
-//        calendar.time
-//        val datePickerDialog = DatePickerDialog(this,
-//            { _, year, month, dayOfMonth ->
-//                if (isStartDate) {
-//                    updateStartDateTextView?.text = "$dayOfMonth-${month + 1}-$year"
-//                    isStartDate = false
-//                    onClickPickStartDate(view) // Show the date picker again for the end date
-//                } else {
-//                    updateStartDateTextView?.text = "${updateStartDateTextView?.text} - $dayOfMonth-${month + 1}-$year"
-//                }
-//            },
-//            year,
-//            month,
-//            day
-//        )
-//        datePickerDialog.show()
-//    }
 fun onClickPickStartDate(view: View?) {
     val calendar = Calendar.getInstance()
     year = calendar[Calendar.YEAR]
