@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.jour.MVVM.Place
 import com.example.jour.MVVM.PlaceViewModel
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.io.FileInputStream
 import java.io.IOException
@@ -47,9 +48,6 @@ class AddEditNoteActivity : AppCompatActivity() {
     private var isStartDate = true // Flag to determine if the selected date is for start or end
 
 
-
-
-
     companion object {
         const val IMAGE_REQ_CODE = 100
     }
@@ -75,6 +73,7 @@ class AddEditNoteActivity : AppCompatActivity() {
         updateStartDateTextView = findViewById<TextView>(R.id.updateStartDateTextView)
 
 
+        val selectedLocation = intent.getParcelableExtra<LatLng>("selectedLocation")
 
         viewModel = ViewModelProvider(
             this,

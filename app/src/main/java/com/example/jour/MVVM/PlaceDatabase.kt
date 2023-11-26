@@ -8,7 +8,7 @@ import androidx.room.TypeConverters
 import com.example.jour.DateTypeConverter
 import com.example.jour.imgConverter.ImageConverter
 
-@Database(entities = arrayOf(Place::class), version = 1, exportSchema = false)
+@Database(entities = arrayOf(Place::class), version = 2, exportSchema = false)
 @TypeConverters(ImageConverter::class, DateTypeConverter::class)
 abstract class PlaceDatabase: RoomDatabase() {
     abstract fun getEntitiesDao(): PlaceDao

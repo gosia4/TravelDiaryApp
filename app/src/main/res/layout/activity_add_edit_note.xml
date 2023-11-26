@@ -134,8 +134,14 @@
         android:clickable="true"
         android:src="@drawable/imageadd_icon"
         android:contentDescription="TODO" />
+<!--    <fragment-->
+<!--        android:id="@+id/mapFragment"-->
+<!--        android:name="com.google.android.gms.maps.SupportMapFragment"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent" />-->
 
-<!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+
+    <!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
 <!--        android:id="@+id/jourFormatButton"-->
 <!--        android:layout_width="wrap_content"-->
 <!--        android:layout_height="wrap_content"-->
