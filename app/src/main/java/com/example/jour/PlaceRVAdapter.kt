@@ -38,8 +38,10 @@ class PlaceRVAdapter(
         holder.titleTV.setText(allEntries.get(position).jourTitle)
         holder.descTV.setText(allEntries.get(position).jourDescription)
         holder.dateTV.setText(allEntries.get(position).jourDate)
-        val ratingText = "Rating: ${allEntries[position].rating}"
-        holder.ratingTV.text = ratingText
+        if (allEntries[position].rating != 0){
+            val ratingText = "Rating: ${allEntries[position].rating}"
+            holder.ratingTV.text = ratingText
+        }
         holder.deleteTV.setOnClickListener{
             noteClickDeleteInterface.onDeleteIconClick(allEntries.get(position))
         }

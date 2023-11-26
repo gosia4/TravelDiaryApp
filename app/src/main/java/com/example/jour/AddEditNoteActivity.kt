@@ -98,7 +98,7 @@ class AddEditNoteActivity : AppCompatActivity() {
             val noteTitle = editTitle.text.toString()
             val noteDesc = editDesc.text.toString()
             val noteRating = rating.rating.toInt()
-            val startDate = updateStartDateTextView?.text.toString() // Get the selected date
+            val startDate = updateStartDateTextView?.text.toString()
 
             if (noteType == "Edit") {
                 if (noteTitle.isNotEmpty() && noteDesc.isNotEmpty() && startDate.isNotEmpty()) {
@@ -191,13 +191,11 @@ fun onClickPickStartDate(view: View?) {
     datePickerDialog.show()
 }
 
-    // Metoda pomocnicza do uzyskania daty początkowej z TextView
     private fun getStartDateFromTextView(): Calendar {
         val startDateText = updateStartDateTextView?.text.toString().split(" - ")[0]
         return parseDate(startDateText)
     }
 
-    // Metoda pomocnicza do parsowania daty z tekstu na obiekt Calendar
     private fun parseDate(dateString: String): Calendar {
         val dateParts = dateString.split("-")
         val year = dateParts[2].toInt()
