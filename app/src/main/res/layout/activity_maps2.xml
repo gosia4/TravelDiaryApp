@@ -12,11 +12,30 @@
 
 <!--    </ScrollView>-->
 
+    <LinearLayout
+        android:id="@+id/topBar"
+        android:layout_width="match_parent"
+        android:layout_height="113dp"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/goBack"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/Color1"
+            android:fontFamily="cursive"
+            android:gravity="center"
+            android:text="Go back"
+            android:textColor="@color/white"
+            android:textSize="30dp" />
+
+    </LinearLayout>
+
     <fragment
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="679dp"
         android:layout_weight="1"
         tools:context=".Maps" />
 

@@ -1,7 +1,9 @@
 package com.example.jour
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.text.InputType
@@ -22,6 +24,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.*
 
 class Maps : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLongClickListener, GoogleMap.OnMarkerClickListener {
@@ -36,6 +39,9 @@ class Maps : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLongClickLi
     private var selectedEndDate: Calendar? = null
     private var isStartDate = true
     private var dateEditText: EditText? = null
+    companion object {
+        const val ADD_EDIT_NOTE_REQUEST = 1 // Możesz użyć dowolnej liczby całkowitej
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +55,25 @@ class Maps : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLongClickLi
             this,
             ViewModelProvider.AndroidViewModelFactory.getInstance(application)
         )[PlaceViewModel::class.java]
+        val topBar = findViewById<LinearLayout>(R.id.topBar)
+        topBar.setOnClickListener {
+            // Handle topBar click
+            startActivity(Intent(this, MainActivity::class.java))
+        }
+
+    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == ADD_EDIT_NOTE_REQUEST && resultCode == Activity.RESULT_OK) {
+            // Odbierz zaktualizowane współrzędne
+            val updatedLatitude = data?.getDoubleExtra("latitude", 0.0)
+            val updatedLongitude = data?.getDoubleExtra("longitude", 0.0)
+
+            // Aktualizuj miejsce na mapie, jeśli to konieczne
+            // ...
+
+        }
     }
 //    override fun onMapReady(googleMap: GoogleMap) {
 //        // Ustawienie ustawień mapy, np. typu mapy, położenia początkowego itp.
@@ -79,23 +104,49 @@ class Maps : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLongClickLi
 //        }
 //    }
 //to wyświetla najpierw dużą mapę a nie Londyn
-    override fun onMapReady(googleMap: GoogleMap) {
-        mMap = googleMap
-        mMap.setOnMapLongClickListener(this)
-        mMap.setOnMarkerClickListener(this)
+//    override fun onMapReady(googleMap: GoogleMap) {
+//        mMap = googleMap
+//        mMap.setOnMapLongClickListener(this)
+//        mMap.setOnMarkerClickListener(this)
+//
+//        viewModel.allEntries.observe(this) { list ->
+//            list?.let {
+//                for (place in it) {
+//                    val poiLocation = LatLng(place.latitude, place.longitude)
+//                    mMap.addMarker(
+//                        MarkerOptions().position(poiLocation).title(place.jourTitle)
+//                            .snippet(place.jourDescription)
+//                    )
+//                }
+//            }
+//        }
+//    }
+override fun onMapReady(googleMap: GoogleMap) {
+    mMap = googleMap
+    mMap.setOnMapLongClickListener(this)
+    mMap.setOnMarkerClickListener(this)
 
-        viewModel.allEntries.observe(this) { list ->
-            list?.let {
-                for (place in it) {
-                    val poiLocation = LatLng(place.latitude, place.longitude)
+    viewModel.allEntries.observe(this) { list ->
+        list?.let {
+            for (place in it) {
+                val poiLocation = place.latitude?.let { it1 -> place.longitude?.let { it2 ->
+                    LatLng(it1,
+                        it2
+                    )
+                } }
+                poiLocation?.let { it1 ->
+                    MarkerOptions().position(it1).title(place.jourTitle)
+                        .snippet(place.jourDescription)
+                }?.let { it2 ->
                     mMap.addMarker(
-                        MarkerOptions().position(poiLocation).title(place.jourTitle)
-                            .snippet(place.jourDescription)
+                        it2
                     )
                 }
             }
         }
     }
+}
+
 
     override fun onMapLongClick(latLng: LatLng) {
         selectedLocation = latLng
@@ -152,7 +203,7 @@ class Maps : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLongClickLi
             val eventDate = dateEditText?.text.toString()
 
             if (selectedLocation != null && title.isNotBlank() && description.isNotBlank() && eventDate.isNotBlank()) {
-                if (place == null) {
+//                if (place == null) {
                     // Dodaj nowe miejsce
                     val newPlace = Place(
                         title,
@@ -166,13 +217,13 @@ class Maps : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLongClickLi
                     viewModel.addNote(newPlace)
                     Toast.makeText(this, "POI added successfully", Toast.LENGTH_SHORT).show()
 
-                } else {
-                    // Edytuj istniejące miejsce
-                    place.jourTitle = title
-                    place.jourDescription = description
-                    place.jourDate = eventDate
-                    viewModel.updateNote(place)
-                }
+//                } else {
+//                    // Edytuj istniejące miejsce
+//                    place.jourTitle = title
+//                    place.jourDescription = description
+//                    place.jourDate = eventDate
+//                    viewModel.updateNote(place)
+//                }
             } else {
                 Toast.makeText(this, "Please fill in all the fields", Toast.LENGTH_SHORT).show()
             }
@@ -238,6 +289,8 @@ class Maps : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLongClickLi
                 dialog.dismiss()
                 Toast.makeText(this, "POI updated successfully", Toast.LENGTH_SHORT).show()
 //                finish()
+//                dialog.dismiss()
+                startActivity(Intent(this, Maps::class.java))
 
             } else {
                 Toast.makeText(this, "Please fill in all the fields", Toast.LENGTH_SHORT).show()
@@ -247,6 +300,7 @@ class Maps : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLongClickLi
         alertDialog.setNeutralButton("Delete") { _, _ ->
             // Usuń istniejące miejsce
             viewModel.deleteNote(place)
+            startActivity(Intent(this, Maps::class.java))
 //            refreshMap()
         }
 

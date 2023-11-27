@@ -14,8 +14,8 @@ class Place(
     @ColumnInfo(name = "date") var jourDate:String,
     @ColumnInfo(name = "rating") val rating:Int,
     @ColumnInfo(name = "image", typeAffinity = ColumnInfo.BLOB) val jourImage: Bitmap?,
-    @ColumnInfo(name = "latitude") val latitude: Double = 0.0,
-    @ColumnInfo(name = "longitude") val longitude: Double = 0.0
+    @ColumnInfo(name = "latitude") val latitude: Double?,
+    @ColumnInfo(name = "longitude") val longitude: Double?
 ) {
     @PrimaryKey(autoGenerate = true)var id=0
 }
