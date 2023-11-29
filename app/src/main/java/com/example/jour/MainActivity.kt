@@ -1,5 +1,6 @@
 package com.example.jour
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.jour.MVVM.Place
 import com.example.jour.MVVM.PlaceViewModel
+import com.example.jour.Maps.Companion.ADD_EDIT_NOTE_REQUEST
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -24,8 +26,6 @@ class MainActivity : AppCompatActivity(), NoteClickEditInterface, NoteClickDelet
     lateinit var addButton: FloatingActionButton
     lateinit var mapButton: FloatingActionButton
     private lateinit var viewModel: PlaceViewModel
-    lateinit var mapView: MapView
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -124,7 +124,4 @@ class MainActivity : AppCompatActivity(), NoteClickEditInterface, NoteClickDelet
             else -> return super.onOptionsItemSelected(item)
         }
     }
-
-
-
 }

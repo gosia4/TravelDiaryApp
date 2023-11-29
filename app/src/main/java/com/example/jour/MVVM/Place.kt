@@ -10,12 +10,12 @@ import androidx.room.PrimaryKey
 class Place(
     @ColumnInfo(name = "Name") var jourTitle:String,
     @ColumnInfo(name = "description") var jourDescription:String,
-//    @ColumnInfo(name = "date") val jourDate:Date,
     @ColumnInfo(name = "date") var jourDate:String,
     @ColumnInfo(name = "rating") val rating:Int,
     @ColumnInfo(name = "image", typeAffinity = ColumnInfo.BLOB) val jourImage: Bitmap?,
     @ColumnInfo(name = "latitude") val latitude: Double?,
-    @ColumnInfo(name = "longitude") val longitude: Double?
+    @ColumnInfo(name = "longitude") val longitude: Double?,
+    @ColumnInfo(name = "added_via_map") val addedViaMap: Boolean = false
 ) {
     @PrimaryKey(autoGenerate = true)var id=0
 }

@@ -62,65 +62,6 @@ class Maps : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLongClickLi
         }
 
     }
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == ADD_EDIT_NOTE_REQUEST && resultCode == Activity.RESULT_OK) {
-            // Odbierz zaktualizowane współrzędne
-            val updatedLatitude = data?.getDoubleExtra("latitude", 0.0)
-            val updatedLongitude = data?.getDoubleExtra("longitude", 0.0)
-
-            // Aktualizuj miejsce na mapie, jeśli to konieczne
-            // ...
-
-        }
-    }
-//    override fun onMapReady(googleMap: GoogleMap) {
-//        // Ustawienie ustawień mapy, np. typu mapy, położenia początkowego itp.
-//        googleMap.mapType = GoogleMap.MAP_TYPE_NORMAL
-//        val initialLocation = LatLng(51.5074, -0.1278) // Początkowe położenie mapy (Londyn)
-//        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(initialLocation, 10f))
-//
-//        // Pobranie miejsc z ViewModel
-//        viewModel.allEntries.observe(this) { places ->
-//            places?.let {
-//                for (place in it) {
-//                    // Sprawdzenie, czy miejsce zostało dodane w AddEditNoteActivity
-//                    if (!viewModel.addedByAddEditNoteActivity) {
-//                        val latLng = LatLng(place.latitude, place.longitude)
-//
-//                        // Dodanie markera do mapy
-//                        googleMap.addMarker(MarkerOptions().position(latLng).title(place.jourTitle))
-//
-//                        // Przykładowa obsługa kliknięcia na markerze
-//                        googleMap.setOnMarkerClickListener { marker ->
-//                            // Obsługa kliknięcia na markerze
-//                            // Możesz otworzyć nową aktywność lub wykonać inne akcje
-//                            true
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
-//to wyświetla najpierw dużą mapę a nie Londyn
-//    override fun onMapReady(googleMap: GoogleMap) {
-//        mMap = googleMap
-//        mMap.setOnMapLongClickListener(this)
-//        mMap.setOnMarkerClickListener(this)
-//
-//        viewModel.allEntries.observe(this) { list ->
-//            list?.let {
-//                for (place in it) {
-//                    val poiLocation = LatLng(place.latitude, place.longitude)
-//                    mMap.addMarker(
-//                        MarkerOptions().position(poiLocation).title(place.jourTitle)
-//                            .snippet(place.jourDescription)
-//                    )
-//                }
-//            }
-//        }
-//    }
 override fun onMapReady(googleMap: GoogleMap) {
     mMap = googleMap
     mMap.setOnMapLongClickListener(this)
@@ -148,11 +89,13 @@ override fun onMapReady(googleMap: GoogleMap) {
 }
 
 
+
+
+
     override fun onMapLongClick(latLng: LatLng) {
         selectedLocation = latLng
         showAddPOIDialog()
     }
-
     private fun showAddPOIDialog(place: Place? = null) {
         val alertDialog = AlertDialog.Builder(this)
         alertDialog.setTitle(if (place == null) "Add POI" else "Edit POI")
@@ -196,34 +139,24 @@ override fun onMapReady(googleMap: GoogleMap) {
         }
 
         alertDialog.setView(linearLayout)
-
         alertDialog.setPositiveButton("Save") { _, _ ->
             val title = titleEditText.text.toString()
             val description = descriptionEditText.text.toString()
             val eventDate = dateEditText?.text.toString()
 
             if (selectedLocation != null && title.isNotBlank() && description.isNotBlank() && eventDate.isNotBlank()) {
-//                if (place == null) {
-                    // Dodaj nowe miejsce
-                    val newPlace = Place(
-                        title,
-                        description,
-                        eventDate,
-                        0,
-                        selectedImage,
-                        selectedLocation!!.latitude,
-                        selectedLocation!!.longitude
-                    )
-                    viewModel.addNote(newPlace)
-                    Toast.makeText(this, "POI added successfully", Toast.LENGTH_SHORT).show()
-
-//                } else {
-//                    // Edytuj istniejące miejsce
-//                    place.jourTitle = title
-//                    place.jourDescription = description
-//                    place.jourDate = eventDate
-//                    viewModel.updateNote(place)
-//                }
+                // Add new place to the database
+                val newPlace = Place(
+                    title,
+                    description,
+                    eventDate,
+                    0,
+                    selectedImage,
+                    selectedLocation!!.latitude,
+                    selectedLocation!!.longitude
+                )
+                viewModel.addNote(newPlace)
+                Toast.makeText(this, "POI added successfully", Toast.LENGTH_SHORT).show()
             } else {
                 Toast.makeText(this, "Please fill in all the fields", Toast.LENGTH_SHORT).show()
             }
@@ -233,7 +166,8 @@ override fun onMapReady(googleMap: GoogleMap) {
             dialog.dismiss()
         }
 
-        alertDialog.show()
+        val dialog = alertDialog.create()  // Add this line
+        dialog.show()  // Add this line
     }
 
     private fun showEditPOIDialog(place: Place) {
@@ -387,20 +321,4 @@ override fun onMapReady(googleMap: GoogleMap) {
         }
         return true
     }
-//    private fun refreshMap() {
-//        // Usuń wszystkie znaczniki z mapy
-//        mMap.clear()
-//
-//        // Pobierz zaktualizowaną listę miejsc
-//        val places = viewModel.allEntries.value
-//
-//        // Dodaj znaczniki na mapie dla każdego miejsca
-//        places?.forEach { place ->
-//            val poiLocation = LatLng(place.latitude, place.longitude)
-//            mMap.addMarker(
-//                MarkerOptions().position(poiLocation).title(place.jourTitle)
-//                    .snippet(place.jourDescription)
-//            )
-//        }
-//    }
 }
