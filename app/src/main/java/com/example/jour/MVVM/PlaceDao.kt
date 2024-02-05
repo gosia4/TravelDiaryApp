@@ -16,4 +16,14 @@ interface PlaceDao {
 
     @Query(value = "Select * from PlaceTable ")
     fun getAllEntries(): LiveData<List<Place>>
+
+    @Query("SELECT * FROM PlaceTable WHERE Name = :title")
+    fun getPlaceByTitle(title: String): LiveData<Place>
+
+    @Query("SELECT * FROM PlaceTable ORDER BY Name ASC")
+    fun getAllEntriesAlphabetically(): LiveData<List<Place>>
+
+    @Query("SELECT * FROM PlaceTable ORDER BY date ASC")
+    fun getAllEntriesByDate(): LiveData<List<Place>>
+
 }

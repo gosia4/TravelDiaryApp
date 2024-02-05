@@ -1,5 +1,6 @@
 package com.example.jour
 
+import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.graphics.Bitmap
@@ -24,25 +25,27 @@ import java.io.IOException
 import java.util.*
 
 class AddEditNoteActivity : AppCompatActivity() {
-    lateinit var backButton: FloatingActionButton
-    lateinit var editTitle: EditText
-    lateinit var editDesc: EditText
-    lateinit var rating: RatingBar
-    lateinit var saveButton: FloatingActionButton
-    lateinit var viewModel: PlaceViewModel
-    lateinit var addImageButton: FloatingActionButton
-    lateinit var theimage: ImageView
+    private var latitude: Double? = 0.0
+    private var longitude: Double? = 0.0
+    private lateinit var backButton: FloatingActionButton
+    private lateinit var editTitle: EditText
+    private lateinit var editDesc: EditText
+    private lateinit var rating: RatingBar
+    private lateinit var saveButton: FloatingActionButton
+    private lateinit var viewModel: PlaceViewModel
+    private lateinit var addImageButton: FloatingActionButton
+    private lateinit var theimage: ImageView
     private var imageURI: Uri? = null
     private var bmp: Bitmap? = null
-    var noteID = -1
+    private var noteID = -1
+    private var selectedLatitude: Double? = null
+    private var selectedLongitude: Double? = null
     private var updateStartDateButton: Button? = null
-    private val tripStartDateString: String? = null
     private var year = 0
     private var month = 0
     private var day = 0
     private var updateStartDateTextView: TextView? = null
-
-
+    private var isStartDate = true
 
     companion object {
         const val IMAGE_REQ_CODE = 100
@@ -55,6 +58,9 @@ class AddEditNoteActivity : AppCompatActivity() {
         editDesc = findViewById(R.id.editNoteDescription)
         rating = findViewById(R.id.ratingBar)
         val editDate = findViewById<EditText>(R.id.updateStartDateTextView)
+        val latitude = intent.getDoubleExtra("latitude", 0.0)
+        val longitude = intent.getDoubleExtra("longitude", 0.0)
+
         val rating = findViewById<RatingBar>(R.id.ratingBar)
         saveButton = findViewById(R.id.jourSaveButton)
         backButton = findViewById(R.id.backButton)
@@ -62,10 +68,7 @@ class AddEditNoteActivity : AppCompatActivity() {
         theimage = findViewById(R.id.imageView1)
 
         updateStartDateButton = findViewById<Button>(R.id.updateStartDateButton)
-
         updateStartDateTextView = findViewById<TextView>(R.id.updateStartDateTextView)
-
-
 
         viewModel = ViewModelProvider(
             this,
@@ -78,6 +81,7 @@ class AddEditNoteActivity : AppCompatActivity() {
             val noteDate = intent.getStringExtra("noteDate")
             val noteDesc = intent.getStringExtra("noteDescription")
             val noteRating = intent.getIntExtra("noteRating", 0)
+            val addedByMap = intent.getBooleanExtra("addedByMap", false)
 
             noteID = intent.getIntExtra("noteID", -1)
             editTitle.setText(noteTitle)
@@ -95,36 +99,68 @@ class AddEditNoteActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
+
+            if (addedByMap) {
+            } else{
+                selectedLatitude = intent.getDoubleExtra("latitude", 0.0)
+                selectedLongitude = intent.getDoubleExtra("longitude", 0.0)
+            }
         }
 
         saveButton.setOnClickListener {
             val noteTitle = editTitle.text.toString()
             val noteDesc = editDesc.text.toString()
             val noteRating = rating.rating.toInt()
-            val startDate = updateStartDateTextView?.text.toString() // Get the selected date
+            val startDate = updateStartDateTextView?.text.toString()
 
             if (noteType == "Edit") {
-                if (noteTitle.isNotEmpty() && noteDesc.isNotEmpty() && startDate.isNotEmpty()) {
-                    val updateNote = Place(noteTitle, noteDesc, startDate, noteRating, bmp) // tu był noteDate
-                    updateNote.id = noteID
-                    viewModel.updateNote(updateNote)
-                    Toast.makeText(this, "Updated!", Toast.LENGTH_SHORT).show()
-                    startActivity(Intent(applicationContext, MainActivity::class.java))
-                    this.finish()
-                } else {
-                    Toast.makeText(this, "Please fill the columns!", Toast.LENGTH_SHORT).show()
-                }
+
+                val updateNote = Place(
+                    noteTitle, noteDesc, startDate, noteRating, bmp,
+                    selectedLatitude?.takeIf { it != 0.0 },
+                    selectedLongitude?.takeIf { it != 0.0 }
+                )
+
+                updateNote.id = noteID
+                viewModel.updateNote(updateNote)
+                Toast.makeText(this, "Updated!", Toast.LENGTH_SHORT).show()
+                startActivity(Intent(applicationContext, MainActivity::class.java))
+                this.finish()
             } else {
-                if (noteTitle.isNotEmpty() && noteDesc.isNotEmpty() && startDate.isNotEmpty()) {
-                    viewModel.addNote(Place(noteTitle, noteDesc, startDate, noteRating, bmp)) // tu był noteDate
+                // Jeżeli latitude lub longitude są null, to miejsce nie będzie wyświetlane na mapie
+                if (selectedLatitude != null && selectedLongitude != null) {
+                    viewModel.addNote(
+                        Place(
+                            noteTitle,
+                            noteDesc,
+                            startDate,
+                            noteRating,
+                            bmp,
+                            selectedLatitude,
+                            selectedLongitude
+                        )
+                    )
                     Toast.makeText(this, "Added!", Toast.LENGTH_SHORT).show()
-                    startActivity(Intent(applicationContext, MainActivity::class.java))
-                    this.finish()
                 } else {
-                    Toast.makeText(this, "Please fill both the columns!", Toast.LENGTH_SHORT).show()
+                    viewModel.addNote(
+                        Place(
+                            noteTitle,
+                            noteDesc,
+                            startDate,
+                            noteRating,
+                            bmp,
+                            null,
+                            null
+                        )
+                    )
+                    Toast.makeText(this, "Added!", Toast.LENGTH_SHORT).show()
                 }
+
+                startActivity(Intent(applicationContext, MainActivity::class.java))
+                this.finish()
             }
         }
+
 
         backButton.setOnClickListener {
             val intent = Intent(this@AddEditNoteActivity, MainActivity::class.java)
@@ -135,7 +171,18 @@ class AddEditNoteActivity : AppCompatActivity() {
         addImageButton.setOnClickListener {
             pickImageGallery()
         }
-        updateStartDateButton?.setOnClickListener { onClickPickStartDate(it) }
+        updateStartDateButton?.setOnClickListener {
+            isStartDate = true
+            onClickPickStartDate(it)
+        }
+    }
+
+    override fun onBackPressed() {
+        val resultIntent = Intent()
+        resultIntent.putExtra("latitude", latitude)
+        resultIntent.putExtra("longitude", longitude)
+        setResult(Activity.RESULT_CANCELED, resultIntent)
+        super.onBackPressed()
     }
 
     private fun pickImageGallery() {
@@ -161,11 +208,6 @@ class AddEditNoteActivity : AppCompatActivity() {
             }
         }
     }
-
-    fun showDates() {
-        updateStartDateTextView?.setText(tripStartDateString)
-    }
-
     fun onClickPickStartDate(view: View?) {
         val calendar = Calendar.getInstance()
         year = calendar[Calendar.YEAR]
@@ -173,11 +215,42 @@ class AddEditNoteActivity : AppCompatActivity() {
         day = calendar[Calendar.DAY_OF_MONTH]
         calendar.time
         val datePickerDialog = DatePickerDialog(this,
-            { view, year, month, dayOfMonth -> updateStartDateTextView?.setText(dayOfMonth.toString() + "-" + (month + 1) + "-" + year) },
+            { _, year, month, dayOfMonth ->
+                if (isStartDate) {
+                    updateStartDateTextView?.text = "$dayOfMonth-${month + 1}-$year"
+                    isStartDate = false
+                    onClickPickStartDate(view) // Pokaż ponownie DatePicker dla daty końcowej
+                } else {
+                    val startDate = getStartDateFromTextView()
+                    val selectedDate = Calendar.getInstance()
+                    selectedDate.set(year, month, dayOfMonth)
+
+                    // Sprawdź, czy data końcowa jest późniejsza niż data początkowa
+                    if (selectedDate.before(startDate)) {
+                        Toast.makeText(this, "Data końcowa nie może być wcześniejsza niż data początkowa", Toast.LENGTH_SHORT).show()
+                    } else {
+                        updateStartDateTextView?.text = "${updateStartDateTextView?.text} - $dayOfMonth-${month + 1}-$year"
+                    }
+                }
+            },
             year,
             month,
             day
         )
         datePickerDialog.show()
+    }
+    private fun getStartDateFromTextView(): Calendar {
+        val startDateText = updateStartDateTextView?.text.toString().split(" - ")[0]
+        return parseDate(startDateText)
+    }
+    private fun parseDate(dateString: String): Calendar {
+        val dateParts = dateString.split("-")
+        val year = dateParts[2].toInt()
+        val month = dateParts[1].toInt() - 1
+        val day = dateParts[0].toInt()
+
+        val calendar = Calendar.getInstance()
+        calendar.set(year, month, day)
+        return calendar
     }
 }

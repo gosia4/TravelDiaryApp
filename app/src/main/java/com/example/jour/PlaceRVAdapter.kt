@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import com.bumptech.glide.Glide
 
 import androidx.recyclerview.widget.RecyclerView
 import com.example.jour.MVVM.Place
@@ -23,6 +24,8 @@ class PlaceRVAdapter(
         val dateTV =itemView.findViewById<TextView>(R.id.dateTextView)
         val ratingTV =itemView.findViewById<TextView>(R.id.rating)
         val deleteTV=itemView.findViewById<ImageView>(R.id.deleteImage)
+        val noteImageView = itemView.findViewById<ImageView>(R.id.noteImageView)
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -35,13 +38,34 @@ class PlaceRVAdapter(
         holder.titleTV.setText(allEntries.get(position).jourTitle)
         holder.descTV.setText(allEntries.get(position).jourDescription)
         holder.dateTV.setText(allEntries.get(position).jourDate)
-        val ratingText = "Rating: ${allEntries[position].rating}"
-        holder.ratingTV.text = ratingText
+        if (allEntries[position].rating != 0){
+            val ratingText = "Rating: ${allEntries[position].rating}"
+            holder.ratingTV.text = ratingText
+        }
         holder.deleteTV.setOnClickListener{
             noteClickDeleteInterface.onDeleteIconClick(allEntries.get(position))
         }
         holder.itemView.setOnClickListener{
             noteClickEditInterface.onNoteClick((allEntries.get(position)))
+        }
+
+        val bmp = allEntries[position].jourImage
+        if (bmp != null) {
+            Glide.with(context)
+                .load(bmp)
+                .centerCrop()
+                .placeholder(R.drawable.ic_launcher_foreground) // Placeholder image while loading
+                .into(holder.noteImageView)
+            holder.noteImageView.visibility = View.VISIBLE
+        } else {
+//            holder.noteImageView.visibility = View.GONE
+
+            // Show a placeholder or set a background color
+//            holder.noteImageView.setBackgroundResource(androidx.appcompat.R.color.material_blue_grey_800)
+//             or
+             holder.noteImageView.setImageResource(R.drawable.blue_image)
+            holder.noteImageView.visibility = View.VISIBLE
+
         }
     }
 

@@ -7,16 +7,16 @@
     android:background="@color/Color2"
     tools:context=".MainActivity">
 
+
     <LinearLayout
         android:id="@+id/topBar"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:orientation="vertical">
+        android:layout_height="70dp">
 
         <TextView
             android:id="@+id/titleJour"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="match_parent"
             android:background="@color/Color1"
             android:fontFamily="cursive"
             android:gravity="center"
@@ -26,15 +26,16 @@
 
     </LinearLayout>
 
-
     <androidx.recyclerview.widget.RecyclerView
-        android:layout_marginTop="0dp"
+        android:id="@+id/jourRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:listitem="@layout/note_card"
+        android:layout_height="653dp"
+        android:layout_below="@+id/topBar"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="11dp"
+        android:layout_marginBottom="-3dp"
         android:background="@color/Color2"
-        android:layout_below="@id/topBar"
-        android:id="@+id/jourRecyclerView"/>
+        tools:listitem="@layout/note_card" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/jourAddButton"
@@ -50,4 +51,35 @@
         android:backgroundTint="@color/Color3"
         android:clickable="true"
         android:src="@drawable/add_icon" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="105dp"
+        android:layout_marginRight="105dp"
+        android:layout_marginBottom="30dp"
+        android:backgroundTint="@color/Color3"
+        android:clickable="true"
+        app:srcCompat="@android:drawable/ic_dialog_map" />
+
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/mapView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="190dp"
+        android:layout_marginRight="190dp"
+        android:layout_marginBottom="35dp"
+        android:backgroundTint="@color/Color3" />
+
 </RelativeLayout>
